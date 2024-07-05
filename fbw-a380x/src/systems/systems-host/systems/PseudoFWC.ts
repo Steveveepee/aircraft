@@ -780,6 +780,10 @@ export class PseudoFWC {
   private readonly eng1AntiIce = Subject.create(false);
 
   private readonly eng2AntiIce = Subject.create(false);
+  
+  private readonly eng3AntiIce = Subject.create(false);
+
+  private readonly eng4AntiIce = Subject.create(false);
 
   private readonly throttle1Position = Subject.create(0);
 
@@ -3791,12 +3795,19 @@ export class PseudoFWC {
       sysPage: 9,
       side: 'LEFT',
     },
-    3081186: {
+       3081186: {
       // SEVERE ICE DETECTED
       flightPhaseInhib: [3, 4, 5, 7, 8],
       simVarIsActive: this.iceSevereDetectedTimerStatus,
-      whichCodeToReturn: () => [0, !this.wingAntiIce.get() ? 1 : null, this.engSelectorPosition.get() !== 2 ? 2 : null],
-      codesToReturn: ['308128001', '308128002', '308128003'],
+      whichCodeToReturn: () => [0,
+        !this.eng1AntiIce.get() ? 1 : null,
+        !this.eng2AntiIce.get() ? 2 : null,
+        !this.eng3AntiIce.get() ? 3 : null,
+        !this.eng4AntiIce.get() ? 4 : null,
+        !this.wingAntiIce.get() ? 1 : null,
+        this.engSelectorPosition.get() !== 2 ? 2 : null
+      ],
+      codesToReturn: ['308118601', '308118602', '308118603','308118604', '308118605','308118606'],
       memoInhibit: () => false,
       failure: 2,
       sysPage: -1,
@@ -3806,8 +3817,13 @@ export class PseudoFWC {
       // ICE DETECTED
       flightPhaseInhib: [3, 4, 5, 7, 8],
       simVarIsActive: this.iceDetectedTimer2Status,
-      whichCodeToReturn: () => [0, !this.eng1AntiIce.get() ? 1 : null, !this.eng2AntiIce.get() ? 2 : null],
-      codesToReturn: ['308128001', '308128002', '308128003'],
+      whichCodeToReturn: () => [0,
+         !this.eng1AntiIce.get() ? 1 : null,
+         !this.eng2AntiIce.get() ? 2 : null,
+         !this.eng3AntiIce.get() ? 3 : null,
+         !this.eng4AntiIce.get() ? 4 : null
+        ],
+      codesToReturn: ['308128001', '308118602', '308118603','308118604', '308118605'],
       memoInhibit: () => false,
       failure: 2,
       sysPage: -1,
